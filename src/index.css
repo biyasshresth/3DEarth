@@ -1,0 +1,292 @@
+
+@import "tailwindcss";
+
+@theme {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --color-ink: #050609;
+  --color-accent: #6b8cff;
+}
+
+/* Root */
+:root {
+  --scroll-progress: 0;
+}
+
+/* Base */
+html {
+  background: #050609;
+  color: #f4f5f7;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  @apply font-sans;
+  overflow-x: hidden;
+}
+
+/* Deep cinematic backdrop behind the transparent WebGL canvas */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      ellipse 80% 60% at 70% 20%,
+      rgba(59, 76, 160, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 20% 85%,
+      rgba(110, 64, 180, 0.18),
+      transparent 60%
+    ),
+    #050609;
+}
+
+/* Selection */
+::selection {
+  background: #6b8cff;
+  color: #050609;
+}
+
+/* Focus */
+:focus-visible {
+  outline: 1px solid #6b8cff;
+  outline-offset: 4px;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Entrance defaults (overridden inline by GSAP) */
+[data-reveal] {
+  opacity: 0;
+}
+
+[data-reveal-clip] {
+  clip-path: inset(100% 0 0 0);
+}
+
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.split-word-inner {
+  display: inline-block;
+  transform: translateY(110%);
+  will-change: transform;
+}
+
+/* Film grain */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Buttons */
+.btn {
+  @apply relative inline-flex items-center overflow-hidden rounded-full px-7 py-4 text-sm font-medium tracking-wide;
+  isolation: isolate;
+}
+
+.btn-label {
+  @apply relative z-10 transition-colors duration-500;
+}
+
+.btn-fill {
+  @apply absolute inset-0 translate-y-full rounded-full transition-transform duration-700 ease-out-expo;
+}
+
+.btn:hover .btn-fill {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  @apply bg-white text-ink;
+}
+
+.btn-primary .btn-fill {
+  @apply bg-accent;
+}
+
+.btn-primary:hover .btn-label {
+  @apply text-black;
+}
+
+.btn-ghost {
+  @apply border border-white/20 text-white transition-colors duration-500 hover:border-white/60;
+}
+
+.btn-ghost .btn-fill {
+  @apply bg-white/5;
+}
+
+/* Underline reveal */
+.link-line {
+  position: relative;
+  transition: color 0.4s;
+}
+
+.link-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-line:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Service rows */
+.service-row {
+  @apply grid grid-cols-[3rem_1fr_2rem] items-start gap-6 border-b border-white/10 py-10 transition-colors duration-700;
+}
+
+.service-row:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(107, 140, 255, 0.06),
+    transparent
+  );
+}
+
+/* Scroll hint */
+.scroll-hint {
+  display: inline-block;
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, #fff, transparent);
+  animation: hint 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes hint {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+
+  51% {
+    transform-origin: bottom;
+  }
+
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* Custom cursor */
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button {
+  cursor: none;
+}
+
+.cursor-dot,
+.cursor-ring,
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition:
+    width 0.5s,
+    height 0.5s,
+    margin 0.5s,
+    background 0.5s,
+    opacity 0.3s;
+}
+
+.cursor-ring.is-active {
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  background: rgba(107, 140, 255, 0.85);
+  border-color: transparent;
+}
+
+.cursor-ring.is-hidden {
+  opacity: 0;
+}
+
+.cursor-glow {
+  width: 600px;
+  height: 600px;
+  margin: -300px 0 0 -300px;
+  border-radius: 50%;
+  z-index: 5;
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle,
+    rgba(107, 140, 255, 0.35),
+    transparent 60%
+  );
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint,
+  .work-art {
+    animation: none;
+    transition: none;
+  }
+}
+
